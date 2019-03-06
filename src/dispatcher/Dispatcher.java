@@ -1,17 +1,17 @@
+package dispatcher;
+
 import agents.Agent;
-import agents.Cashier;
-import agents.Supervisor;
+import client.Client;
 import utils.SortAgents;
 
 import java.util.*;
 
 public class Dispatcher {
-
     private Queue<Client> clients;
     private Queue<Agent> agents;
 
     public Dispatcher(){
-        this.clients = new PriorityQueue<Client>();
+        this.clients = new LinkedList<>();
         this.agents = new PriorityQueue<Agent>(new SortAgents());
     }
 
@@ -24,10 +24,11 @@ public class Dispatcher {
     }
 
     public void attend(){
-        if(agents.peek().getIsBussy()){
-            clients.peek();
-            clients.poll();
-            agents.poll().setIsBussy(true);
+        if( ! agents.peek().isBusy() ){
+            Agent readyAgent = agents.poll();
+            readyAgent.setClient(clients.poll());
+            readyAgent.attendClient();
+            addAgents(readyAgent);
         }
     }
 }
