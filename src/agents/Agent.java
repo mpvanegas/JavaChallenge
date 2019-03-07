@@ -1,17 +1,18 @@
 package agents;
 
 import client.Client;
+import operations.CustomerIssues;
+import operations.Deposit;
+import operations.Withdraw;
 
 public abstract class Agent {
 
     private int workId;
     private boolean isBusy;
-    private Client client;
 
     public Agent(int workId ){
         this.workId = workId;
         this.isBusy = false;
-        this.client = null;
     }
 
     public int getWorkId(){
@@ -22,34 +23,19 @@ public abstract class Agent {
         return isBusy;
     }
 
-    public Client getClient() {
-        return client;
-    }
+    public void attendClient(Client client){
 
-    public void setWorkId(int workId) {
-        this.workId = workId;
-    }
-
-    public void setBusy(boolean isBusy){
-        this.isBusy = isBusy;
-    }
-
-    public void setClient(Client client){
-        this.client = client;
-    }
-
-    public void attendClient(){
         this.isBusy = true;
-        try {
-            Thread.sleep(client.getAttentionTime());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         if(client.getType() == Client.Operation.DEPOSIT) {
-            client.deposit();
+            Deposit deposit = new Deposit(client);
+            deposit.operation();
         }else if(client.getType() == Client.Operation.WITHDRAW){
-            client.withdraw();
+            Withdraw withdraw = new Withdraw(client);
+            withdraw.operation();
+        }else{
+            CustomerIssues customerIssues = new CustomerIssues(client);
+            customerIssues.operation();
         }
 
         this.isBusy = false;

@@ -46,13 +46,4 @@ public class Client {
         this.balance = balance;
     }
 
-    public int deposit(){
-        balance += amount;
-        return balance;
-    }
-
-    public int withdraw(){
-        balance -= amount;
-        return balance;
-    }
 }
